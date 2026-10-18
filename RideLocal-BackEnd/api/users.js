@@ -1,0 +1,37 @@
+import express from "express";
+import { createUser, getUserByEmailAndPassword } from "#db/queries/users";
+import { createToken } from "#utils/jwt";
+import requireUser from "#middleware/requireUser";
+
+const router = express.Router();
+export default router;
+
+router.post("/register", async (req, res) => {
+  const { name, email, password, zip_code } = req.body ?? {};
+  if (!name || !email || !password || !zip_code) {
+    return res
+      .status(400)
+      .send("Name, email, password and zip code are required.");
+  }
+
+  const user = await createUser(req.body);
+  const token = createToken({ id: user.id });
+  res.status(201).send({ token, user });
+});
+
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body ?? {};
+  if (!email || !password) {
+    return res.status(400).send("Email and password are required.");
+  }
+
+  const user = await getUserByEmailAndPassword(email, password);
+  if (!user) return res.status(401).send("Invalid email or password.");
+
+  const token = createToken({ id: user.id });
+  res.send({ token, user });
+});
+
+router.get("/me", requireUser, (req, res) => {
+  res.send(req.user);
+});
