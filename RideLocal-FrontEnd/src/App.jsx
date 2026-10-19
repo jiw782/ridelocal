@@ -1,7 +1,10 @@
-import { Route, Routes } from 'react-router'
-import Login from './auth/Login.jsx'
-import Register from './auth/Register.jsx'
-import Navbar from './layout/Navbar.jsx'
+import { Route, Routes } from "react-router";
+import Login from "./auth/Login.jsx";
+import Register from "./auth/Register.jsx";
+import Navbar from "./layout/Navbar.jsx";
+import RideList from "./rides/RideList.jsx";
+import RideDetails from "./rides/RideDetails.jsx";
+import NewRide from "./rides/NewRide.jsx";
 
 export default function App() {
   return (
@@ -9,11 +12,13 @@ export default function App() {
       <Navbar />
       <main>
         <Routes>
-          <Route path="/" element={<h1>RideLocal</h1>} />
+          <Route path="/" element={<RideList />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/rides/:id" element={<RideDetails />} />
+          <Route path="/rides/new" element={<NewRide />} />
         </Routes>
       </main>
     </>
-  )
+  );
 }

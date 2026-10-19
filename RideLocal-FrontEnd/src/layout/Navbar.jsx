@@ -11,6 +11,7 @@ export default function Navbar() {
         {user ? (
           <>
             <span>Hi, {user.name}!</span>
+            <NavLink to="/rides/new">New ride</NavLink>
             <button onClick={logout}>Log out</button>
           </>
         ) : (

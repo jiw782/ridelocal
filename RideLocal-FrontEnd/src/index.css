@@ -1,8 +1,132 @@
 :root {
-  font-family: system-ui, sans-serif;
-  line-height: 1.5;
+  --color-primary: #2f6f4f;
+  --color-bg: #f7f7f5;
+  --color-text: #1f1f1f;
+  --radius: 8px;
+  --space: 1rem;
+}
+
+/* Page basics */
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space);
+}
+
+a {
+  color: var(--color-primary);
+}
+
+/* Navbar: logo on the left, links on the right */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space);
+  background: var(--color-primary);
+}
+
+header a,
+header span {
+  color: white;
+  text-decoration: none;
+}
+
+header > a {
+  font-weight: bold;
+  font-size: 1.25rem;
+}
+
+header nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space);
+}
+
+header nav a.active {
+  text-decoration: underline;
+}
+
+/* Forms: each label above its input */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+  margin-bottom: var(--space);
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-weight: 600;
+}
+
+input,
+select,
+textarea {
+  font: inherit;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: var(--radius);
+}
+
+button {
+  font: inherit;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--color-primary);
+  color: white;
+  cursor: pointer;
+}
+
+form button {
+  align-self: flex-start;
+}
+
+header button {
+  background: white;
+  color: var(--color-primary);
+}
+
+[role="alert"] {
+  color: #b00020;
+}
+
+/* Ride list as cards */
+.ride-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+}
+
+.ride-list li {
+  background: white;
+  padding: var(--space);
+  border-radius: var(--radius);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+}
+
+.ride-list li > a {
+  font-size: 1.125rem;
+  font-weight: bold;
+}
+
+.ride-list p {
+  margin: 0.25rem 0 0;
 }
