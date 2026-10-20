@@ -62,3 +62,19 @@ export async function getRideById(id) {
   } = await db.query(sql, [id]);
   return ride;
 }
+
+/** Upcoming rides a user has joined, soonest first, with how many riders have joined */
+export async function getRidesByUserId(user_id) {
+  const sql = `
+  SELECT
+    rides.*,
+    (SELECT COUNT(*)::int FROM ride_members WHERE ride_id = rides.id) AS rider_count
+  FROM rides
+  JOIN ride_members ON ride_members.ride_id = rides.id
+  WHERE ride_members.user_id = $1
+    AND rides.ride_date >= now()
+  ORDER BY rides.ride_date
+  `;
+  const { rows: rides } = await db.query(sql, [user_id]);
+  return rides;
+}

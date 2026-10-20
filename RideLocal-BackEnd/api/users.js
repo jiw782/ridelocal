@@ -2,6 +2,7 @@ import express from "express";
 import { createUser, getUserByEmailAndPassword } from "#db/queries/users";
 import { createToken } from "#utils/jwt";
 import requireUser from "#middleware/requireUser";
+import { getRidesByUserId } from "#db/queries/rides";
 
 const router = express.Router();
 export default router;
@@ -34,4 +35,9 @@ router.post("/login", async (req, res) => {
 
 router.get("/me", requireUser, (req, res) => {
   res.send(req.user);
+});
+
+router.get("/me/rides", requireUser, async (req, res) => {
+  const rides = await getRidesByUserId(req.user.id);
+  res.send(rides);
 });

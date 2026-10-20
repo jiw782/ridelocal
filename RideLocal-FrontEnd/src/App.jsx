@@ -5,6 +5,7 @@ import Navbar from "./layout/Navbar.jsx";
 import RideList from "./rides/RideList.jsx";
 import RideDetails from "./rides/RideDetails.jsx";
 import NewRide from "./rides/NewRide.jsx";
+import Profile from "./users/Profile.jsx";
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/rides/:id" element={<RideDetails />} />
           <Route path="/rides/new" element={<NewRide />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </main>
     </>

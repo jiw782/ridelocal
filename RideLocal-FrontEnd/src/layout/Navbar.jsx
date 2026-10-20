@@ -1,8 +1,8 @@
-import { Link, NavLink } from 'react-router'
-import { useAuth } from '../auth/AuthContext.jsx'
+import { Link, NavLink } from "react-router";
+import { useAuth } from "../auth/AuthContext.jsx";
 
 export default function Navbar() {
-  const { user, logout } = useAuth()
+  const { user, logout } = useAuth();
 
   return (
     <header>
@@ -12,6 +12,7 @@ export default function Navbar() {
           <>
             <span>Hi, {user.name}!</span>
             <NavLink to="/rides/new">New ride</NavLink>
+            <NavLink to="/profile">My rides</NavLink>
             <button onClick={logout}>Log out</button>
           </>
         ) : (
@@ -22,5 +23,5 @@ export default function Navbar() {
         )}
       </nav>
     </header>
-  )
+  );
 }
