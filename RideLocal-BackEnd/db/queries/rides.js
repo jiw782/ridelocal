@@ -78,3 +78,57 @@ export async function getRidesByUserId(user_id) {
   const { rows: rides } = await db.query(sql, [user_id]);
   return rides;
 }
+
+/** Replaces a ride's details. Returns undefined if the ride doesn't exist */
+export async function updateRide(
+  id,
+  {
+    title,
+    description,
+    zip_code,
+    meeting_spot,
+    ride_date,
+    difficulty,
+    max_riders,
+  },
+) {
+  const sql = `
+  UPDATE rides
+  SET
+    title = $2,
+    description = $3,
+    zip_code = $4,
+    meeting_spot = $5,
+    ride_date = $6,
+    difficulty = COALESCE($7, 'easy'),
+    max_riders = $8
+  WHERE id = $1
+  RETURNING *
+  `;
+  const {
+    rows: [ride],
+  } = await db.query(sql, [
+    id,
+    title,
+    description,
+    zip_code,
+    meeting_spot,
+    ride_date,
+    difficulty,
+    max_riders,
+  ]);
+  return ride;
+}
+
+/** Deletes a ride; its ride_members rows go with it (ON DELETE CASCADE) */
+export async function deleteRide(id) {
+  const sql = `
+  DELETE FROM rides
+  WHERE id = $1
+  RETURNING *
+  `;
+  const {
+    rows: [ride],
+  } = await db.query(sql, [id]);
+  return ride;
+}

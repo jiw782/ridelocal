@@ -31,6 +31,7 @@ export default function Profile() {
       <h1>{user.name}</h1>
       <p>Zip code: {user.zip_code}</p>
       {user.bio && <p>{user.bio}</p>}
+      <Link to="/profile/edit">Edit profile</Link>
 
       <h2>My rides</h2>
       {error && <p role="alert">{error}</p>}

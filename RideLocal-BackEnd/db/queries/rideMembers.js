@@ -35,3 +35,16 @@ export async function getRidersByRideId(ride_id) {
   const { rows: riders } = await db.query(sql, [ride_id]);
   return riders;
 }
+
+/** Removes a user from a ride. Returns undefined if they hadn't joined it */
+export async function leaveRide(ride_id, user_id) {
+  const sql = `
+  DELETE FROM ride_members
+  WHERE ride_id = $1 AND user_id = $2
+  RETURNING *
+  `;
+  const {
+    rows: [member],
+  } = await db.query(sql, [ride_id, user_id]);
+  return member;
+}

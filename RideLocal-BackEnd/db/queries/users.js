@@ -57,3 +57,17 @@ export async function getUserById(id) {
   } = await db.query(sql, [id]);
   return user;
 }
+
+/** Updates the profile fields a user can change themselves */
+export async function updateUser(id, { name, zip_code, bio, profile_pic }) {
+  const sql = `
+  UPDATE users
+  SET name = $2, zip_code = $3, bio = $4, profile_pic = $5
+  WHERE id = $1
+  RETURNING id, name, email, zip_code, bio, profile_pic
+  `;
+  const {
+    rows: [user],
+  } = await db.query(sql, [id, name, zip_code, bio, profile_pic]);
+  return user;
+}

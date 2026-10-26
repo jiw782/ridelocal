@@ -1,6 +1,16 @@
 import express from "express";
-import { createRide, getRideById, getRidesByZip } from "#db/queries/rides";
-import { getRidersByRideId, joinRide } from "#db/queries/rideMembers";
+import {
+  createRide,
+  deleteRide,
+  getRideById,
+  getRidesByZip,
+  updateRide,
+} from "#db/queries/rides";
+import {
+  getRidersByRideId,
+  joinRide,
+  leaveRide,
+} from "#db/queries/rideMembers";
 import requireUser from "#middleware/requireUser";
 
 const router = express.Router();
@@ -47,4 +57,48 @@ router.post("/:id/join", requireUser, async (req, res) => {
   if (!member)
     return res.status(409).send("This ride is full or you've already joined.");
   res.status(201).send(member);
+});
+
+router.delete("/:id/join", requireUser, async (req, res) => {
+  const ride = await getRideById(req.params.id);
+  if (!ride) return res.status(404).send("Ride not found.");
+  if (ride.creator_id === req.user.id)
+    return res.status(400).send("You can't leave a ride you're hosting.");
+
+  const member = await leaveRide(ride.id, req.user.id);
+  if (!member) return res.status(404).send("You haven't joined this ride.");
+  res.send(member);
+});
+
+router.put("/:id", requireUser, async (req, res) => {
+  const ride = await getRideById(req.params.id);
+  if (!ride) return res.status(404).send("Ride not found.");
+  if (ride.creator_id !== req.user.id)
+    return res.status(403).send("Only the host can edit this ride.");
+
+  const { title, zip_code, meeting_spot, ride_date, max_riders } =
+    req.body ?? {};
+  if (!title || !zip_code || !meeting_spot || !ride_date) {
+    return res
+      .status(400)
+      .send("Title, zip code, meeting spot and ride date are required.");
+  }
+  if (max_riders && max_riders < ride.rider_count) {
+    return res
+      .status(400)
+      .send(`${ride.rider_count} riders have already joined this ride.`);
+  }
+
+  const updated = await updateRide(ride.id, req.body);
+  res.send(updated);
+});
+
+router.delete("/:id", requireUser, async (req, res) => {
+  const ride = await getRideById(req.params.id);
+  if (!ride) return res.status(404).send("Ride not found.");
+  if (ride.creator_id !== req.user.id)
+    return res.status(403).send("Only the host can delete this ride.");
+
+  const deleted = await deleteRide(ride.id);
+  res.send(deleted);
 });

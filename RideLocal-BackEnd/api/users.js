@@ -1,5 +1,9 @@
 import express from "express";
-import { createUser, getUserByEmailAndPassword } from "#db/queries/users";
+import {
+  createUser,
+  getUserByEmailAndPassword,
+  updateUser,
+} from "#db/queries/users";
 import { createToken } from "#utils/jwt";
 import requireUser from "#middleware/requireUser";
 import { getRidesByUserId } from "#db/queries/rides";
@@ -40,4 +44,20 @@ router.get("/me", requireUser, (req, res) => {
 router.get("/me/rides", requireUser, async (req, res) => {
   const rides = await getRidesByUserId(req.user.id);
   res.send(rides);
+});
+
+router.put("/me", requireUser, async (req, res) => {
+  const { name, zip_code, bio, profile_pic } = req.body ?? {};
+  if (!name || !zip_code) {
+    return res.status(400).send("Name and zip code are required.");
+  }
+
+  const user = await updateUser(req.user.id, {
+    name,
+    zip_code,
+    // an empty box clears the field
+    bio: bio || null,
+    profile_pic: profile_pic || null,
+  });
+  res.send(user);
 });
