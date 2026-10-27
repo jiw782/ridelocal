@@ -17,6 +17,8 @@ async function seed() {
     { name: "Sam", email: "sam@example.com", zip: "77002", bio: "Training for my first century." },
     { name: "Priya", email: "priya@example.com", zip: "77002", bio: null },
     { name: "Leo", email: "leo@example.com", zip: "77003", bio: "Sunset rides only." },
+    { name: "Alex", email: "alex@example.com", zip: "77006", bio: "Montrose local. Will stop for tacos." },
+    { name: "Jordan", email: "jordan@example.com", zip: "77006", bio: "Road bike, gravel bike, any bike." },
   ];
 
   const userIds = {};
@@ -94,12 +96,117 @@ async function seed() {
       maxRiders: 12,
       riders: [],
     },
+
+    // Demo rides in 77006 on fixed dates (date is "YYYY-MM-DD", local time)
+    {
+      creator: "Alex",
+      title: "Montrose coffee crawl",
+      description: "Three coffee shops, ten easy miles, lots of talking.",
+      zip: "77006",
+      meetingSpot: "Menil Collection lawn",
+      date: "2026-11-07",
+      hour: 9,
+      difficulty: "easy",
+      maxRiders: 12,
+      riders: ["Jordan", "Maya", "Dana", "Chris"],
+    },
+    {
+      creator: "Jordan",
+      title: "Buffalo Bayou loop",
+      description: "Both sides of the bayou trail at a steady pace. Lights recommended.",
+      zip: "77006",
+      meetingSpot: "Waugh Drive Bridge",
+      date: "2026-11-10",
+      hour: 18,
+      difficulty: "moderate",
+      maxRiders: 10,
+      riders: ["Alex", "Sam"],
+    },
+    {
+      creator: "Maya",
+      title: "Beginner skills clinic",
+      description: "Practice group riding basics: signaling, spacing and stopping safely.",
+      zip: "77006",
+      meetingSpot: "Cherryhurst Park",
+      date: "2026-11-14",
+      hour: 10,
+      difficulty: "easy",
+      maxRiders: null,
+      riders: ["Dana"],
+    },
+    {
+      creator: "Sam",
+      title: "Tuesday tempo",
+      description: "Fast and focused. Expect 20+ mph on the flats.",
+      zip: "77006",
+      meetingSpot: "Westheimer & Montrose",
+      date: "2026-11-17",
+      hour: 6,
+      difficulty: "hard",
+      maxRiders: 4,
+      // Full, so the demo can show what a full ride looks like
+      riders: ["Priya", "Jordan", "Leo"],
+    },
+    {
+      creator: "Alex",
+      title: "Friday night lights ride",
+      description: "A slow social ride under the city lights. Bring blinkies!",
+      zip: "77006",
+      meetingSpot: "Menil Collection lawn",
+      date: "2026-11-20",
+      hour: 19,
+      difficulty: "easy",
+      maxRiders: 20,
+      riders: ["Leo", "Chris", "Priya"],
+    },
+    {
+      creator: "Jordan",
+      title: "Turkey burner",
+      description: "Burn off Thanksgiving dinner with a moderate 25-miler.",
+      zip: "77006",
+      meetingSpot: "Waugh Drive Bridge",
+      date: "2026-11-27",
+      hour: 8,
+      difficulty: "moderate",
+      maxRiders: 15,
+      riders: ["Alex", "Maya", "Sam", "Dana"],
+    },
+    {
+      creator: "Priya",
+      title: "Heights hill climb",
+      description: "Up and over the Heights bridges, regrouping after each one.",
+      zip: "77006",
+      meetingSpot: "Fairview Street Bike Shop",
+      date: "2026-12-05",
+      hour: 7,
+      difficulty: "hard",
+      maxRiders: 8,
+      riders: ["Sam"],
+    },
+    {
+      creator: "Alex",
+      title: "Holiday lights tour",
+      description: "Cruise the best-decorated streets in Montrose. Santa hats welcome.",
+      zip: "77006",
+      meetingSpot: "Cherryhurst Park",
+      date: "2026-12-13",
+      hour: 18,
+      difficulty: "easy",
+      maxRiders: null,
+      riders: [],
+    },
   ];
 
   for (const ride of rides) {
-    const rideDate = new Date();
-    rideDate.setDate(rideDate.getDate() + ride.daysFromNow);
-    rideDate.setHours(ride.hour, 0, 0, 0);
+    let rideDate;
+    if (ride.date) {
+      const [year, month, day] = ride.date.split("-").map(Number);
+      rideDate = new Date(year, month - 1, day, ride.hour);
+    } else {
+      rideDate = new Date();
+      rideDate.setDate(rideDate.getDate() + ride.daysFromNow);
+      rideDate.setHours(ride.hour, 0, 0, 0);
+    }
 
     const {
       rows: [{ id: rideId }],

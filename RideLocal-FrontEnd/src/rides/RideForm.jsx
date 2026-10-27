@@ -31,7 +31,7 @@ export default function RideForm({ ride = {}, onSubmit, submitLabel }) {
   }
 
   return (
-    <form action={onSave}>
+    <form className="card" action={onSave}>
       <label>
         Title
         <input name="title" defaultValue={ride.title} required />

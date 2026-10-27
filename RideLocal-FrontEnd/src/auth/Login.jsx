@@ -19,9 +19,9 @@ export default function Login() {
   }
 
   return (
-    <>
+    <div className="auth">
       <h1>Log in</h1>
-      <form action={onLogin}>
+      <form className="card" action={onLogin}>
         <label>
           Email
           <input type="email" name="email" required />
@@ -36,6 +36,6 @@ export default function Login() {
       <p>
         Need an account? <Link to="/register">Register here.</Link>
       </p>
-    </>
+    </div>
   )
 }

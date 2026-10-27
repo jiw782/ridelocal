@@ -37,7 +37,9 @@ export default function EditRide() {
     <>
       <h1>Edit ride</h1>
       <RideForm ride={ride} onSubmit={onSave} submitLabel="Save changes" />
-      <Link to={`/rides/${id}`}>Cancel</Link>
+      <Link className="button secondary" to={`/rides/${id}`}>
+        Cancel
+      </Link>
     </>
   );
 }

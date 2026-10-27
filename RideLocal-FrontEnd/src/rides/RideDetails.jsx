@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import { api } from "../api.js";
 import { useAuth } from "../auth/AuthContext.jsx";
+import { formatRideDate } from "./formatDate.js";
 
 export default function RideDetails() {
   const { id } = useParams();
@@ -31,6 +32,7 @@ export default function RideDetails() {
   async function onJoin() {
     try {
       await api(`/rides/${id}/join`, { method: "POST", token });
+      setError(null); // clear any message left from an earlier attempt
       loadRide(); // refresh the rider count and list
     } catch (e) {
       setError(e.message);
@@ -40,7 +42,8 @@ export default function RideDetails() {
   async function onLeave() {
     try {
       await api(`/rides/${id}/join`, { method: "DELETE", token });
-      loadRide(); // refresh the rider count and list
+      setError(null);
+      loadRide();
     } catch (e) {
       setError(e.message);
     }
@@ -58,52 +61,75 @@ export default function RideDetails() {
 
   if (!ride) return error ? <p role="alert">{error}</p> : <p>Loading...</p>;
 
+  const isHost = user?.id === ride.creator_id;
   const hasJoined = riders.some((rider) => rider.id === user?.id);
   const isFull = ride.max_riders && ride.rider_count >= ride.max_riders;
 
   return (
     <>
-      <h1>{ride.title}</h1>
-      <p>Hosted by {ride.creator_name}</p>
-      <p>{new Date(ride.ride_date).toLocaleString()}</p>
-      <p>
-        Meet at {ride.meeting_spot} ({ride.zip_code})
-      </p>
-      <p>Difficulty: {ride.difficulty}</p>
-      {ride.description && <p>{ride.description}</p>}
-
-      {user?.id === ride.creator_id && (
+      <article className="card ride-details">
+        <h1>{ride.title}</h1>
         <p>
-          <Link to={`/rides/${id}/edit`}>Edit ride</Link>{" "}
-          <button onClick={onDelete}>Delete ride</button>
+          Hosted by <Link to={`/users/${ride.creator_id}`}>{ride.creator_name}</Link>
         </p>
-      )}
+        <dl>
+          <dt>When</dt>
+          <dd>{formatRideDate(ride.ride_date)}</dd>
+          <dt>Where</dt>
+          <dd>
+            {ride.meeting_spot} ({ride.zip_code})
+          </dd>
+          <dt>Difficulty</dt>
+          <dd>
+            <span className={`badge badge-${ride.difficulty}`}>
+              {ride.difficulty}
+            </span>
+          </dd>
+        </dl>
+        {ride.description && <p>{ride.description}</p>}
 
-      {!user ? (
-        <p>
-          <Link to="/login">Log in</Link> to join this ride.
-        </p>
-      ) : hasJoined ? (
-        <p>
-          You're going!{" "}
-          {ride.creator_id !== user.id && (
-            <button onClick={onLeave}>Leave ride</button>
+        <div className="actions">
+          {!user ? (
+            <p>
+              <Link to="/login">Log in</Link> to join this ride.
+            </p>
+          ) : isHost ? (
+            <>
+              <Link className="button secondary" to={`/rides/${id}/edit`}>
+                Edit ride
+              </Link>
+              <button className="danger" onClick={onDelete}>
+                Delete ride
+              </button>
+            </>
+          ) : hasJoined ? (
+            <>
+              <p>You're going!</p>
+              <button className="secondary" onClick={onLeave}>
+                Leave ride
+              </button>
+            </>
+          ) : isFull ? (
+            <p>This ride is full.</p>
+          ) : (
+            <button onClick={onJoin}>Join ride</button>
           )}
-        </p>
-      ) : isFull ? (
-        <p>This ride is full.</p>
-      ) : (
-        <button onClick={onJoin}>Join ride</button>
-      )}
-      {error && <p role="alert">{error}</p>}
+        </div>
+        {error && <p role="alert">{error}</p>}
+      </article>
 
       <h2>
         Riders ({ride.rider_count}
         {ride.max_riders && ` / ${ride.max_riders}`})
       </h2>
-      <ul>
+      <ul className="rider-list">
         {riders.map((rider) => (
-          <li key={rider.id}>{rider.name}</li>
+          <li key={rider.id}>
+            <Link to={`/users/${rider.id}`}>
+              {rider.name}
+              {rider.id === ride.creator_id && " (host)"}
+            </Link>
+          </li>
         ))}
       </ul>
     </>

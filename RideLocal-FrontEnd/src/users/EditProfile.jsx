@@ -39,7 +39,7 @@ export default function EditProfile() {
   return (
     <>
       <h1>Edit profile</h1>
-      <form action={onSave}>
+      <form className="card" action={onSave}>
         <label>
           Name
           <input name="name" defaultValue={user.name} required />
@@ -69,7 +69,9 @@ export default function EditProfile() {
         <button>Save changes</button>
         {error && <p role="alert">{error}</p>}
       </form>
-      <Link to="/profile">Cancel</Link>
+      <Link className="button secondary" to="/profile">
+        Cancel
+      </Link>
     </>
   );
 }

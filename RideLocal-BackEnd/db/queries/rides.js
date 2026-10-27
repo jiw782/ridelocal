@@ -132,3 +132,33 @@ export async function deleteRide(id) {
   } = await db.query(sql, [id]);
   return ride;
 }
+
+/** Upcoming rides a user is hosting, soonest first, with how many riders have joined */
+export async function getRidesByCreatorId(creator_id) {
+  const sql = `
+  SELECT
+    rides.*,
+    (SELECT COUNT(*)::int FROM ride_members WHERE ride_id = rides.id) AS rider_count
+  FROM rides
+  WHERE rides.creator_id = $1
+    AND rides.ride_date >= now()
+  ORDER BY rides.ride_date
+  `;
+  const { rows: rides } = await db.query(sql, [creator_id]);
+  return rides;
+}
+
+/** The next upcoming rides anywhere, soonest first, for visitors who haven't searched */
+export async function getUpcomingRides(limit = 20) {
+  const sql = `
+  SELECT rides.*, COUNT(ride_members.user_id)::int AS rider_count
+  FROM rides
+  LEFT JOIN ride_members ON ride_members.ride_id = rides.id
+  WHERE rides.ride_date >= now()
+  GROUP BY rides.id
+  ORDER BY rides.ride_date
+  LIMIT $1
+  `;
+  const { rows: rides } = await db.query(sql, [limit]);
+  return rides;
+}

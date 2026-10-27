@@ -4,6 +4,7 @@ import {
   deleteRide,
   getRideById,
   getRidesByZip,
+  getUpcomingRides,
   updateRide,
 } from "#db/queries/rides";
 import {
@@ -16,12 +17,10 @@ import requireUser from "#middleware/requireUser";
 const router = express.Router();
 export default router;
 
-// GET /api/rides?zip=77001
+// GET /api/rides?zip=77001, or without a zip for the next rides anywhere
 router.get("/", async (req, res) => {
   const { zip } = req.query;
-  if (!zip) return res.status(400).send("A zip code is required.");
-
-  const rides = await getRidesByZip(zip);
+  const rides = zip ? await getRidesByZip(zip) : await getUpcomingRides();
   res.send(rides);
 });
 

@@ -1,12 +1,13 @@
 import express from "express";
 import {
   createUser,
+  getPublicUserById,
   getUserByEmailAndPassword,
   updateUser,
 } from "#db/queries/users";
 import { createToken } from "#utils/jwt";
 import requireUser from "#middleware/requireUser";
-import { getRidesByUserId } from "#db/queries/rides";
+import { getRidesByCreatorId, getRidesByUserId } from "#db/queries/rides";
 
 const router = express.Router();
 export default router;
@@ -60,4 +61,16 @@ router.put("/me", requireUser, async (req, res) => {
     profile_pic: profile_pic || null,
   });
   res.send(user);
+});
+
+// These come after the /me routes so "me" isn't treated as an id
+router.get("/:id", async (req, res) => {
+  const user = await getPublicUserById(req.params.id);
+  if (!user) return res.status(404).send("User not found.");
+  res.send(user);
+});
+
+router.get("/:id/rides", async (req, res) => {
+  const rides = await getRidesByCreatorId(req.params.id);
+  res.send(rides);
 });

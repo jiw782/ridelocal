@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { api } from "../api.js";
 import { useAuth } from "../auth/AuthContext.jsx";
+import RideCards from "../rides/RideCards.jsx";
 
 export default function Profile() {
   const { token, user } = useAuth();
@@ -17,39 +18,50 @@ export default function Profile() {
 
   if (!token)
     return (
-      <p>
+      <p className="empty">
         <Link to="/login">Log in</Link> to see your profile.
       </p>
     );
   if (!user) return <p>Loading...</p>;
 
+  // Hosts are riders on their own rides too, so split them out
+  const hosting = rides.filter((ride) => ride.creator_id === user.id);
+  const joined = rides.filter((ride) => ride.creator_id !== user.id);
+
   return (
     <>
-      {user.profile_pic && (
-        <img src={user.profile_pic} alt={user.name} width="120" />
-      )}
-      <h1>{user.name}</h1>
-      <p>Zip code: {user.zip_code}</p>
-      {user.bio && <p>{user.bio}</p>}
-      <Link to="/profile/edit">Edit profile</Link>
+      <section className="card profile-header">
+        {user.profile_pic && (
+          <img className="avatar" src={user.profile_pic} alt="" />
+        )}
+        <div>
+          <h1>{user.name}</h1>
+          <p>Zip code: {user.zip_code}</p>
+          {user.bio && <p>{user.bio}</p>}
+          <Link to="/profile/edit">Edit profile</Link>
+        </div>
+      </section>
 
-      <h2>My rides</h2>
       {error && <p role="alert">{error}</p>}
-      {rides.length === 0 && <p>You haven't joined any rides yet.</p>}
-      <ul>
-        {rides.map((ride) => (
-          <li key={ride.id}>
-            <Link to={`/rides/${ride.id}`}>{ride.title}</Link>
-            <p>
-              {new Date(ride.ride_date).toLocaleString()} · {ride.meeting_spot}
-            </p>
-            <p>
-              {ride.difficulty} · {ride.rider_count}
-              {ride.max_riders && ` / ${ride.max_riders}`} riders
-            </p>
-          </li>
-        ))}
-      </ul>
+
+      <h2>Hosting</h2>
+      {hosting.length === 0 ? (
+        <p className="empty">
+          You aren't hosting any upcoming rides.{" "}
+          <Link to="/rides/new">Create one?</Link>
+        </p>
+      ) : (
+        <RideCards rides={hosting} />
+      )}
+
+      <h2>Joined</h2>
+      {joined.length === 0 ? (
+        <p className="empty">
+          You haven't joined any upcoming rides. <Link to="/">Find one?</Link>
+        </p>
+      ) : (
+        <RideCards rides={joined} />
+      )}
     </>
   );
 }

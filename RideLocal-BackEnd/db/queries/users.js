@@ -71,3 +71,16 @@ export async function updateUser(id, { name, zip_code, bio, profile_pic }) {
   } = await db.query(sql, [id, name, zip_code, bio, profile_pic]);
   return user;
 }
+
+/** What anyone can see about a user, so no email */
+export async function getPublicUserById(id) {
+  const sql = `
+  SELECT id, name, zip_code, bio, profile_pic
+  FROM users
+  WHERE id = $1
+  `;
+  const {
+    rows: [user],
+  } = await db.query(sql, [id]);
+  return user;
+}

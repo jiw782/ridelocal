@@ -21,9 +21,9 @@ export default function Register() {
   }
 
   return (
-    <>
+    <div className="auth">
       <h1>Register</h1>
-      <form action={onRegister}>
+      <form className="card" action={onRegister}>
         <label>
           Name
           <input name="name" required />
@@ -46,6 +46,6 @@ export default function Register() {
       <p>
         Already have an account? <Link to="/login">Log in here.</Link>
       </p>
-    </>
+    </div>
   )
 }
