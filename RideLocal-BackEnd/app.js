@@ -1,4 +1,5 @@
 import express from "express";
+import path from "node:path";
 import getUserFromToken from "#middleware/getUserFromToken";
 import usersRouter from "#api/users";
 import ridesRouter from "#api/rides";
@@ -14,6 +15,18 @@ app.get("/api/health", (req, res) => {
 });
 app.use("/api/users", usersRouter);
 app.use("/api/rides", ridesRouter);
+
+// Unknown API routes get a 404 instead of the React page
+app.use("/api", (req, res) => res.status(404).send("Not found."));
+
+// Serve the built React app (run `npm run build` in RideLocal-FrontEnd first)
+const dist = path.join(import.meta.dirname, "../RideLocal-FrontEnd/dist");
+app.use(express.static(dist));
+
+// Any other path is a React Router page, so send index.html and let React handle it
+app.get("/{*splat}", (req, res) => {
+  res.sendFile(path.join(dist, "index.html"));
+});
 
 app.use((err, req, res, next) => {
   if (err.code === "23505")
