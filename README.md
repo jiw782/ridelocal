@@ -62,10 +62,10 @@ A **user** looks like `{ id, name, email, zip_code, bio, profile_pic }`. Passwor
 |---|---|---|---|---|
 | `GET` | `/rides?zip=77001` | | `200` upcoming rides in that zip, soonest first. Without `zip`, the next 20 upcoming rides anywhere | |
 | `POST` | `/rides` 🔒 | `title`, `zip_code`, `meeting_spot`, `ride_date`, `description`?, `difficulty`?, `max_riders`? | `201` ride (the host joins it automatically) | `400` missing or invalid field |
-| `GET` | `/rides/:id` | | `200` ride with `creator_name` | `404` |
+| `GET` | `/rides/:id` 🔒 | | `200` ride with `creator_name` | `404` |
 | `PUT` | `/rides/:id` 🔒 host only | same as `POST /rides` | `200` updated ride | `400` missing field or `max_riders` below current riders, `403`, `404` |
 | `DELETE` | `/rides/:id` 🔒 host only | | `200` deleted ride | `403`, `404` |
-| `GET` | `/rides/:id/riders` | | `200` `[{ id, name, profile_pic }]` | |
+| `GET` | `/rides/:id/riders` 🔒 | | `200` `[{ id, name, profile_pic }]` | |
 | `POST` | `/rides/:id/join` 🔒 | | `201` `{ ride_id, user_id }` | `404`, `409` full or already joined |
 | `DELETE` | `/rides/:id/join` 🔒 | | `200` `{ ride_id, user_id }` | `400` host can't leave, `404` not joined |
 

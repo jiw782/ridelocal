@@ -1,8 +1,15 @@
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
 import { useAuth } from "../auth/AuthContext.jsx";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  // Leave whatever page you were on, so nothing from your session stays up
+  function onLogout() {
+    logout();
+    navigate("/");
+  }
 
   return (
     <header>
@@ -30,7 +37,7 @@ export default function Navbar() {
             <span>Hi, {user.name}!</span>
             <NavLink to="/rides/new">New ride</NavLink>
             <NavLink to="/profile">My rides</NavLink>
-            <button onClick={logout}>Log out</button>
+            <button onClick={onLogout}>Log out</button>
           </>
         ) : (
           <>

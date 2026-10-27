@@ -12,10 +12,11 @@ export default function EditRide() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    api(`/rides/${id}`)
+    if (!token) return;
+    api(`/rides/${id}`, { token })
       .then(setRide)
       .catch((e) => setError(e.message));
-  }, [id]);
+  }, [id, token]);
 
   if (!token) {
     return (

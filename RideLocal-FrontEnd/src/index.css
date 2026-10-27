@@ -1,14 +1,14 @@
 :root {
-  --color-primary: #1f6f4a;
-  --color-primary-dark: #17553a;
-  --color-primary-light: #e3f1e8;
-  --color-accent: #f2a93b;
+  --color-primary: #0f766e;
+  --color-primary-dark: #134e4a;
+  --color-primary-light: #ccfbf1;
+  --color-accent: #fbbf24;
   --color-danger: #b00020;
-  --color-bg: #f4f6f3;
+  --color-bg: #f4f7f7;
   --color-surface: #ffffff;
-  --color-text: #1b1f1d;
-  --color-muted: #5d6862;
-  --color-border: #dfe4e0;
+  --color-text: #172524;
+  --color-muted: #55676a;
+  --color-border: #dce5e5;
   --radius: 12px;
   --space: 1rem;
   --shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 2px 8px rgb(0 0 0 / 0.04);
@@ -61,7 +61,7 @@ a:hover {
 
 /* Keyboard users can always see where focus is */
 :focus-visible {
-  outline: 3px solid var(--color-accent);
+  outline: 3px solid #f59e0b;
   outline-offset: 2px;
 }
 
@@ -239,8 +239,8 @@ body {
   margin: calc(var(--space) * -2) calc(50% - 50vw) calc(var(--space) * 2);
   padding: calc(var(--space) * 4) var(--space) calc(var(--space) * 6);
   background:
-    radial-gradient(circle at 85% 20%, rgb(242 169 59 / 0.15), transparent 40%),
-    linear-gradient(135deg, var(--color-primary-dark), #2e8b5e);
+    radial-gradient(circle at 85% 20%, rgb(251 191 36 / 0.18), transparent 45%),
+    linear-gradient(135deg, var(--color-primary-dark), #14b8a6);
   color: white;
   overflow: hidden;
 }
@@ -270,7 +270,7 @@ body {
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-accent);
+  color: #fde68a;
   opacity: 1;
 }
 
@@ -321,7 +321,7 @@ body {
 }
 
 .search button:hover {
-  background: #e0952a;
+  background: #f59e0b;
   color: var(--color-text);
 }
 
@@ -598,4 +598,13 @@ body {
 
 .auth form button {
   align-self: stretch;
+}
+
+/* Logged-out prompt on a ride page */
+.locked {
+  text-align: center;
+}
+
+.locked p {
+  color: var(--color-muted);
 }

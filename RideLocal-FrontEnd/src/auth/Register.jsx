@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router'
+import { Link, useLocation, useNavigate } from 'react-router'
 import { useAuth } from './AuthContext.jsx'
 
 export default function Register() {
   const { register } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const [error, setError] = useState(null)
 
   async function onRegister(formData) {
@@ -14,7 +15,8 @@ export default function Register() {
     const zip_code = formData.get('zip_code')
     try {
       await register({ name, email, password, zip_code })
-      navigate('/')
+      // Go back to the page that sent them here, like a ride they wanted to see
+      navigate(location.state?.from ?? '/')
     } catch (e) {
       setError(e.message)
     }

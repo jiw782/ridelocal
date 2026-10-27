@@ -24,7 +24,8 @@ export default function RideCards({ rides }) {
                   {ride.difficulty}
                 </span>{" "}
                 {ride.rider_count}
-                {ride.max_riders && ` / ${ride.max_riders}`} riders
+                {ride.max_riders && ` / ${ride.max_riders}`}{" "}
+                {ride.rider_count === 1 && !ride.max_riders ? "rider" : "riders"}
               </p>
             </div>
           </li>

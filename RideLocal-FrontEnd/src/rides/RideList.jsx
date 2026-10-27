@@ -114,7 +114,7 @@ export default function RideList() {
           <path
             d="M0 185 C300 160 600 195 900 170 S1100 165 1200 175"
             fill="none"
-            stroke="#f2a93b"
+            stroke="#fbbf24"
             strokeWidth="4"
             strokeDasharray="18 14"
             opacity="0.8"

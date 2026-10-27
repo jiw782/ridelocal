@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { api } from "../api.js";
 import { useAuth } from "../auth/AuthContext.jsx";
 import { formatRideDate } from "./formatDate.js";
@@ -8,6 +8,7 @@ export default function RideDetails() {
   const { id } = useParams();
   const { token, user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [ride, setRide] = useState(null);
   const [riders, setRiders] = useState([]);
   const [error, setError] = useState(null);
@@ -15,8 +16,8 @@ export default function RideDetails() {
   async function loadRide() {
     try {
       const [ride, riders] = await Promise.all([
-        api(`/rides/${id}`),
-        api(`/rides/${id}/riders`),
+        api(`/rides/${id}`, { token }),
+        api(`/rides/${id}/riders`, { token }),
       ]);
       setRide(ride);
       setRiders(riders);
@@ -26,8 +27,8 @@ export default function RideDetails() {
   }
 
   useEffect(() => {
-    loadRide();
-  }, [id]);
+    if (token) loadRide();
+  }, [id, token]);
 
   async function onJoin() {
     try {
@@ -57,6 +58,29 @@ export default function RideDetails() {
     } catch (e) {
       setError(e.message);
     }
+  }
+
+  if (!token) {
+    return (
+      <section className="card auth locked">
+        <h1>Log in to see this ride</h1>
+        <p>
+          Ride details, the meeting spot and who's going are only shown to
+          RideLocal members.
+        </p>
+        {/* from sends them back here once they've logged in */}
+        <Link className="button" to="/login" state={{ from: location.pathname }}>
+          Log in
+        </Link>{" "}
+        <Link
+          className="button secondary"
+          to="/register"
+          state={{ from: location.pathname }}
+        >
+          Create an account
+        </Link>
+      </section>
+    );
   }
 
   if (!ride) return error ? <p role="alert">{error}</p> : <p>Loading...</p>;
@@ -89,11 +113,7 @@ export default function RideDetails() {
         {ride.description && <p>{ride.description}</p>}
 
         <div className="actions">
-          {!user ? (
-            <p>
-              <Link to="/login">Log in</Link> to join this ride.
-            </p>
-          ) : isHost ? (
+          {isHost ? (
             <>
               <Link className="button secondary" to={`/rides/${id}/edit`}>
                 Edit ride

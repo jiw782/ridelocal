@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router'
+import { Link, useLocation, useNavigate } from 'react-router'
 import { useAuth } from './AuthContext.jsx'
 
 export default function Login() {
   const { login } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const [error, setError] = useState(null)
 
   async function onLogin(formData) {
@@ -12,7 +13,8 @@ export default function Login() {
     const password = formData.get('password')
     try {
       await login({ email, password })
-      navigate('/')
+      // Go back to the page that sent them here, like a ride they wanted to see
+      navigate(location.state?.from ?? '/')
     } catch (e) {
       setError(e.message)
     }

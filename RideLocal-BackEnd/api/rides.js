@@ -37,13 +37,14 @@ router.post("/", requireUser, async (req, res) => {
   res.status(201).send(ride);
 });
 
-router.get("/:id", async (req, res) => {
+// Ride details and riders are for logged-in users only
+router.get("/:id", requireUser, async (req, res) => {
   const ride = await getRideById(req.params.id);
   if (!ride) return res.status(404).send("Ride not found.");
   res.send(ride);
 });
 
-router.get("/:id/riders", async (req, res) => {
+router.get("/:id/riders", requireUser, async (req, res) => {
   const riders = await getRidersByRideId(req.params.id);
   res.send(riders);
 });
