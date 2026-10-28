@@ -30,6 +30,12 @@ export default function RideDetails() {
     if (token) loadRide();
   }, [id, token]);
 
+  // City and state for the ride's zip, from Zippopotam via our backend
+  const [place, setPlace] = useState(null);
+  useEffect(() => {
+    if (ride) api(`/zips/${ride.zip_code}`).then(setPlace).catch(() => {});
+  }, [ride?.zip_code]);
+
   async function onJoin() {
     try {
       await api(`/rides/${id}/join`, { method: "POST", token });
@@ -101,7 +107,8 @@ export default function RideDetails() {
           <dd>{formatRideDate(ride.ride_date)}</dd>
           <dt>Where</dt>
           <dd>
-            {ride.meeting_spot} ({ride.zip_code})
+            {ride.meeting_spot} ({place && `${place.city}, ${place.state} `}
+            {ride.zip_code})
           </dd>
           <dt>Difficulty</dt>
           <dd>

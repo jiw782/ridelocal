@@ -59,6 +59,13 @@ export default function RideList() {
       .catch((e) => setError(e.message));
   }, [zip]);
 
+  // City and state for the searched zip, from Zippopotam via our backend
+  const [place, setPlace] = useState(null);
+  useEffect(() => {
+    setPlace(null);
+    if (zip) api(`/zips/${zip}`).then(setPlace).catch(() => {});
+  }, [zip]);
+
   function onSearch(formData) {
     setSearchParams({ zip: formData.get("zip") });
   }
@@ -148,7 +155,11 @@ export default function RideList() {
 
       <div className="results-header">
         <div>
-          <h2>{zip ? `Upcoming rides in ${zip}` : "Upcoming rides"}</h2>
+          <h2>
+            {zip
+              ? `Upcoming rides in ${place ? `${place.city}, ${place.state} ` : ""}${zip}`
+              : "Upcoming rides"}
+          </h2>
           {rides && (
             <p>
               {rides.length} {rides.length === 1 ? "ride" : "rides"}
