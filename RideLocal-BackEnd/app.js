@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import path from "node:path";
 import getUserFromToken from "#middleware/getUserFromToken";
 import usersRouter from "#api/users";
@@ -8,6 +9,8 @@ import zipsRouter from "#api/zips";
 const app = express();
 export default app;
 
+// Only the deployed frontend (or localhost during development) may call the API
+app.use(cors({ origin: process.env.CORS_ORIGIN ?? /localhost/ }));
 app.use(express.json());
 app.use(getUserFromToken);
 

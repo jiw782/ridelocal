@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
+import { API_URL } from '../api.js'
 
 const AuthContext = createContext()
 
@@ -14,14 +15,14 @@ export function AuthProvider({ children }) {
       return
     }
     localStorage.setItem('token', token)
-    fetch('/api/users/me', { headers: { Authorization: `Bearer ${token}` } })
+    fetch(`${API_URL}/api/users/me`, { headers: { Authorization: `Bearer ${token}` } })
       .then((res) => (res.ok ? res.json() : Promise.reject()))
       .then(setUser)
       .catch(() => setToken(null)) // the token expired or is invalid, so log out
   }, [token])
 
   async function authenticate(path, body) {
-    const res = await fetch(`/api/users/${path}`, {
+    const res = await fetch(`${API_URL}/api/users/${path}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
