@@ -13,6 +13,7 @@ import {
   leaveRide,
 } from "#db/queries/rideMembers";
 import requireUser from "#middleware/requireUser";
+import { lookupZip } from "#utils/zippopotam";
 
 const router = express.Router();
 export default router;
@@ -31,6 +32,8 @@ router.post("/", requireUser, async (req, res) => {
       .status(400)
       .send("Title, zip code, meeting spot and ride date are required.");
   }
+  if (!(await lookupZip(zip_code)))
+    return res.status(400).send("That zip code doesn't exist.");
 
   const ride = await createRide({ ...req.body, creator_id: req.user.id });
   await joinRide(ride.id, req.user.id);
@@ -83,6 +86,8 @@ router.put("/:id", requireUser, async (req, res) => {
       .status(400)
       .send("Title, zip code, meeting spot and ride date are required.");
   }
+  if (!(await lookupZip(zip_code)))
+    return res.status(400).send("That zip code doesn't exist.");
   if (max_riders && max_riders < ride.rider_count) {
     return res
       .status(400)

@@ -3,6 +3,7 @@ import path from "node:path";
 import getUserFromToken from "#middleware/getUserFromToken";
 import usersRouter from "#api/users";
 import ridesRouter from "#api/rides";
+import zipsRouter from "#api/zips";
 
 const app = express();
 export default app;
@@ -15,6 +16,7 @@ app.get("/api/health", (req, res) => {
 });
 app.use("/api/users", usersRouter);
 app.use("/api/rides", ridesRouter);
+app.use("/api/zips", zipsRouter);
 
 // Unknown API routes get a 404 instead of the React page
 app.use("/api", (req, res) => res.status(404).send("Not found."));
