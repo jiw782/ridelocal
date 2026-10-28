@@ -18,6 +18,14 @@ import { lookupZip } from "#utils/zippopotam";
 const router = express.Router();
 export default router;
 
+/** Checks the fields a ride needs. Returns an error message, or null if the ride is valid. */
+async function validateRide({ title, zip_code, meeting_spot, ride_date } = {}) {
+  if (!title || !zip_code || !meeting_spot || !ride_date)
+    return "Title, zip code, meeting spot and ride date are required.";
+  if (!(await lookupZip(zip_code))) return "That zip code doesn't exist.";
+  return null;
+}
+
 // GET /api/rides?zip=77001, or without a zip for the next rides anywhere
 router.get("/", async (req, res) => {
   const { zip } = req.query;
@@ -26,14 +34,8 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", requireUser, async (req, res) => {
-  const { title, zip_code, meeting_spot, ride_date } = req.body ?? {};
-  if (!title || !zip_code || !meeting_spot || !ride_date) {
-    return res
-      .status(400)
-      .send("Title, zip code, meeting spot and ride date are required.");
-  }
-  if (!(await lookupZip(zip_code)))
-    return res.status(400).send("That zip code doesn't exist.");
+  const invalidReason = await validateRide(req.body);
+  if (invalidReason) return res.status(400).send(invalidReason);
 
   const ride = await createRide({ ...req.body, creator_id: req.user.id });
   await joinRide(ride.id, req.user.id);
@@ -79,15 +81,10 @@ router.put("/:id", requireUser, async (req, res) => {
   if (ride.creator_id !== req.user.id)
     return res.status(403).send("Only the host can edit this ride.");
 
-  const { title, zip_code, meeting_spot, ride_date, max_riders } =
-    req.body ?? {};
-  if (!title || !zip_code || !meeting_spot || !ride_date) {
-    return res
-      .status(400)
-      .send("Title, zip code, meeting spot and ride date are required.");
-  }
-  if (!(await lookupZip(zip_code)))
-    return res.status(400).send("That zip code doesn't exist.");
+  const invalidReason = await validateRide(req.body);
+  if (invalidReason) return res.status(400).send(invalidReason);
+
+  const { max_riders } = req.body;
   if (max_riders && max_riders < ride.rider_count) {
     return res
       .status(400)

@@ -1,6 +1,7 @@
 import db from "#db/client";
 import bcrypt from "bcrypt";
 
+/** Saves a new user with a hashed password. The hash is never returned. */
 export async function createUser({
   name,
   email,
@@ -28,6 +29,7 @@ export async function createUser({
   return user;
 }
 
+/** The user with this email, or null if there isn't one or the password is wrong */
 export async function getUserByEmailAndPassword(email, password) {
   const sql = `
   SELECT *
@@ -46,6 +48,7 @@ export async function getUserByEmailAndPassword(email, password) {
   return user;
 }
 
+/** A user's full profile, including email, for the logged-in user themselves */
 export async function getUserById(id) {
   const sql = `
   SELECT id, name, email, zip_code, bio, profile_pic

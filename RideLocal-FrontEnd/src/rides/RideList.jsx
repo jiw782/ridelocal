@@ -2,42 +2,40 @@ import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router";
 import { api } from "../api.js";
 import { useAuth } from "../auth/AuthContext.jsx";
+import Icon, { BikeIcon } from "../layout/Icon.jsx";
 import RideCards from "./RideCards.jsx";
+import { usePlace } from "./usePlace.js";
 
+// The "how it works" cards shown to visitors who aren't logged in
 const steps = [
   {
     title: "Find",
     text: "Search your zip code for group rides happening nearby.",
     icon: (
-      <>
+      <Icon>
         <circle cx="11" cy="11" r="7" />
         <path d="m20 20-3.5-3.5" />
-      </>
+      </Icon>
     ),
   },
   {
     title: "Join",
     text: "Pick a ride at your pace, from easy cruises to hard climbs.",
     icon: (
-      <>
+      <Icon>
         <circle cx="9" cy="8" r="4" />
         <path d="M2 21a7 7 0 0 1 14 0M19 8v6M16 11h6" />
-      </>
+      </Icon>
     ),
   },
   {
     title: "Ride",
     text: "Meet at the spot, roll out together, and make new riding friends.",
-    icon: (
-      <>
-        <circle cx="5.5" cy="17.5" r="3.5" />
-        <circle cx="18.5" cy="17.5" r="3.5" />
-        <path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2" />
-      </>
-    ),
+    icon: <BikeIcon />,
   },
 ];
 
+/** The home page: a zip code search and the upcoming rides it finds */
 export default function RideList() {
   const { user } = useAuth();
   // The searched zip lives in the URL (/?zip=77001), so searches can be
@@ -56,15 +54,10 @@ export default function RideList() {
         setRides(rides);
         setError(null);
       })
-      .catch((e) => setError(e.message));
+      .catch((error) => setError(error.message));
   }, [zip]);
 
-  // City and state for the searched zip, from Zippopotam via our backend
-  const [place, setPlace] = useState(null);
-  useEffect(() => {
-    setPlace(null);
-    if (zip) api(`/zips/${zip}`).then(setPlace).catch(() => {});
-  }, [zip]);
+  const place = usePlace(zip);
 
   function onSearch(formData) {
     setSearchParams({ zip: formData.get("zip") });
@@ -133,19 +126,7 @@ export default function RideList() {
         <ol className="steps">
           {steps.map((step) => (
             <li key={step.title}>
-              <svg
-                width="28"
-                height="28"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                {step.icon}
-              </svg>
+              {step.icon}
               <h2>{step.title}</h2>
               <p>{step.text}</p>
             </li>

@@ -1,22 +1,23 @@
-import { useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router'
-import { useAuth } from './AuthContext.jsx'
+import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router";
+import { useAuth } from "./AuthContext.jsx";
 
+/** The login form */
 export default function Login() {
-  const { login } = useAuth()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const [error, setError] = useState(null)
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [error, setError] = useState(null);
 
   async function onLogin(formData) {
-    const email = formData.get('email')
-    const password = formData.get('password')
+    const email = formData.get("email");
+    const password = formData.get("password");
     try {
-      await login({ email, password })
+      await login({ email, password });
       // Go back to the page that sent them here, like a ride they wanted to see
-      navigate(location.state?.from ?? '/')
-    } catch (e) {
-      setError(e.message)
+      navigate(location.state?.from ?? "/");
+    } catch (error) {
+      setError(error.message);
     }
   }
 
@@ -39,5 +40,5 @@ export default function Login() {
         Need an account? <Link to="/register">Register here.</Link>
       </p>
     </div>
-  )
+  );
 }

@@ -25,7 +25,9 @@ export default function RideCards({ rides }) {
                 </span>{" "}
                 {ride.rider_count}
                 {ride.max_riders && ` / ${ride.max_riders}`}{" "}
-                {ride.rider_count === 1 && !ride.max_riders ? "rider" : "riders"}
+                {ride.rider_count === 1 && !ride.max_riders
+                  ? "rider"
+                  : "riders"}
               </p>
               {/* How full the ride is; the count above already says it in words */}
               {ride.max_riders && (

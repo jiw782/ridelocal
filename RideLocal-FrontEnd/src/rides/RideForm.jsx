@@ -25,8 +25,8 @@ export default function RideForm({ ride = {}, onSubmit, submitLabel }) {
         // an empty box means no limit; "" would fail as an integer
         max_riders: maxRiders ? Number(maxRiders) : null,
       });
-    } catch (e) {
-      setError(e.message);
+    } catch (error) {
+      setError(error.message);
     }
   }
 

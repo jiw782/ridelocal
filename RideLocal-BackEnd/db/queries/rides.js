@@ -1,5 +1,6 @@
 import db from "#db/client";
 
+/** Saves a new ride; difficulty defaults to easy */
 export async function createRide({
   creator_id,
   title,
@@ -32,7 +33,7 @@ export async function createRide({
 }
 
 /** Upcoming rides in a zip code, soonest first, with how many riders have joined */
-export async function getRidesByZip(zip_code) {
+export async function getRidesByZip(zipCode) {
   const sql = `
   SELECT rides.*, COUNT(ride_members.user_id)::int AS rider_count
   FROM rides
@@ -42,7 +43,7 @@ export async function getRidesByZip(zip_code) {
   GROUP BY rides.id
   ORDER BY rides.ride_date
   `;
-  const { rows: rides } = await db.query(sql, [zip_code]);
+  const { rows: rides } = await db.query(sql, [zipCode]);
   return rides;
 }
 
@@ -64,7 +65,7 @@ export async function getRideById(id) {
 }
 
 /** Upcoming rides a user has joined, soonest first, with how many riders have joined */
-export async function getRidesByUserId(user_id) {
+export async function getRidesByUserId(userId) {
   const sql = `
   SELECT
     rides.*,
@@ -75,7 +76,7 @@ export async function getRidesByUserId(user_id) {
     AND rides.ride_date >= now()
   ORDER BY rides.ride_date
   `;
-  const { rows: rides } = await db.query(sql, [user_id]);
+  const { rows: rides } = await db.query(sql, [userId]);
   return rides;
 }
 
@@ -134,7 +135,7 @@ export async function deleteRide(id) {
 }
 
 /** Upcoming rides a user is hosting, soonest first, with how many riders have joined */
-export async function getRidesByCreatorId(creator_id) {
+export async function getRidesByCreatorId(creatorId) {
   const sql = `
   SELECT
     rides.*,
@@ -144,7 +145,7 @@ export async function getRidesByCreatorId(creator_id) {
     AND rides.ride_date >= now()
   ORDER BY rides.ride_date
   `;
-  const { rows: rides } = await db.query(sql, [creator_id]);
+  const { rows: rides } = await db.query(sql, [creatorId]);
   return rides;
 }
 

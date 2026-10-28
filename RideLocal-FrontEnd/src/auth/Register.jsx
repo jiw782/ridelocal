@@ -1,24 +1,26 @@
-import { useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router'
-import { useAuth } from './AuthContext.jsx'
+import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router";
+import { useAuth } from "./AuthContext.jsx";
 
+/** The sign-up form */
 export default function Register() {
-  const { register } = useAuth()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const [error, setError] = useState(null)
+  const { register } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [error, setError] = useState(null);
 
   async function onRegister(formData) {
-    const name = formData.get('name')
-    const email = formData.get('email')
-    const password = formData.get('password')
-    const zip_code = formData.get('zip_code')
     try {
-      await register({ name, email, password, zip_code })
+      await register({
+        name: formData.get("name"),
+        email: formData.get("email"),
+        password: formData.get("password"),
+        zip_code: formData.get("zip_code"),
+      });
       // Go back to the page that sent them here, like a ride they wanted to see
-      navigate(location.state?.from ?? '/')
-    } catch (e) {
-      setError(e.message)
+      navigate(location.state?.from ?? "/");
+    } catch (error) {
+      setError(error.message);
     }
   }
 
@@ -49,5 +51,5 @@ export default function Register() {
         Already have an account? <Link to="/login">Log in here.</Link>
       </p>
     </div>
-  )
+  );
 }

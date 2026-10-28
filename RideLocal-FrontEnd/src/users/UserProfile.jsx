@@ -7,7 +7,7 @@ import RideCards from "../rides/RideCards.jsx";
 /** Another rider's public profile and the rides they're hosting */
 export default function UserProfile() {
   const { id } = useParams();
-  const { user: me } = useAuth();
+  const { user: currentUser } = useAuth();
   const [user, setUser] = useState(null);
   const [rides, setRides] = useState([]);
   const [error, setError] = useState(null);
@@ -18,12 +18,18 @@ export default function UserProfile() {
         setUser(user);
         setRides(rides);
       })
-      .catch((e) => setError(e.message));
+      .catch((error) => setError(error.message));
   }, [id]);
 
   // Your own page has more on it, like the edit link
-  if (me && String(me.id) === id) return <Navigate to="/profile" replace />;
-  if (!user) return error ? <p role="alert">{error}</p> : <p className="loading">Loading...</p>;
+  if (currentUser && String(currentUser.id) === id)
+    return <Navigate to="/profile" replace />;
+  if (!user)
+    return error ? (
+      <p role="alert">{error}</p>
+    ) : (
+      <p className="loading">Loading...</p>
+    );
 
   return (
     <>

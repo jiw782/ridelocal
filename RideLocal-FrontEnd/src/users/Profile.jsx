@@ -4,6 +4,7 @@ import { api } from "../api.js";
 import { useAuth } from "../auth/AuthContext.jsx";
 import RideCards from "../rides/RideCards.jsx";
 
+/** Your own profile, with the rides you're hosting and the rides you've joined */
 export default function Profile() {
   const { token, user } = useAuth();
   const [rides, setRides] = useState([]);
@@ -13,7 +14,7 @@ export default function Profile() {
     if (!token) return;
     api("/users/me/rides", { token })
       .then(setRides)
-      .catch((e) => setError(e.message));
+      .catch((error) => setError(error.message));
   }, [token]);
 
   if (!token)

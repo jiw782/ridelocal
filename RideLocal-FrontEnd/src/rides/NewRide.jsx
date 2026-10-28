@@ -3,6 +3,7 @@ import { api } from "../api.js";
 import { useAuth } from "../auth/AuthContext.jsx";
 import RideForm from "./RideForm.jsx";
 
+/** The page for hosting a new ride */
 export default function NewRide() {
   const { token, user } = useAuth();
   const navigate = useNavigate();

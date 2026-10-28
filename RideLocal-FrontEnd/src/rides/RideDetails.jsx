@@ -3,7 +3,9 @@ import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { api } from "../api.js";
 import { useAuth } from "../auth/AuthContext.jsx";
 import { formatRideDate } from "./formatDate.js";
+import { usePlace } from "./usePlace.js";
 
+/** One ride's details and riders, with join, leave, edit and delete buttons */
 export default function RideDetails() {
   const { id } = useParams();
   const { token, user } = useAuth();
@@ -21,8 +23,8 @@ export default function RideDetails() {
       ]);
       setRide(ride);
       setRiders(riders);
-    } catch (e) {
-      setError(e.message);
+    } catch (error) {
+      setError(error.message);
     }
   }
 
@@ -30,19 +32,15 @@ export default function RideDetails() {
     if (token) loadRide();
   }, [id, token]);
 
-  // City and state for the ride's zip, from Zippopotam via our backend
-  const [place, setPlace] = useState(null);
-  useEffect(() => {
-    if (ride) api(`/zips/${ride.zip_code}`).then(setPlace).catch(() => {});
-  }, [ride?.zip_code]);
+  const place = usePlace(ride?.zip_code);
 
   async function onJoin() {
     try {
       await api(`/rides/${id}/join`, { method: "POST", token });
       setError(null); // clear any message left from an earlier attempt
       loadRide(); // refresh the rider count and list
-    } catch (e) {
-      setError(e.message);
+    } catch (error) {
+      setError(error.message);
     }
   }
 
@@ -51,8 +49,8 @@ export default function RideDetails() {
       await api(`/rides/${id}/join`, { method: "DELETE", token });
       setError(null);
       loadRide();
-    } catch (e) {
-      setError(e.message);
+    } catch (error) {
+      setError(error.message);
     }
   }
 
@@ -61,8 +59,8 @@ export default function RideDetails() {
     try {
       await api(`/rides/${id}`, { method: "DELETE", token });
       navigate("/profile");
-    } catch (e) {
-      setError(e.message);
+    } catch (error) {
+      setError(error.message);
     }
   }
 
@@ -75,7 +73,11 @@ export default function RideDetails() {
           RideLocal members.
         </p>
         {/* from sends them back here once they've logged in */}
-        <Link className="button" to="/login" state={{ from: location.pathname }}>
+        <Link
+          className="button"
+          to="/login"
+          state={{ from: location.pathname }}
+        >
           Log in
         </Link>{" "}
         <Link
@@ -89,7 +91,12 @@ export default function RideDetails() {
     );
   }
 
-  if (!ride) return error ? <p role="alert">{error}</p> : <p className="loading">Loading...</p>;
+  if (!ride)
+    return error ? (
+      <p role="alert">{error}</p>
+    ) : (
+      <p className="loading">Loading...</p>
+    );
 
   const isHost = user?.id === ride.creator_id;
   const hasJoined = riders.some((rider) => rider.id === user?.id);
@@ -100,7 +107,8 @@ export default function RideDetails() {
       <article className="card ride-details">
         <h1>{ride.title}</h1>
         <p>
-          Hosted by <Link to={`/users/${ride.creator_id}`}>{ride.creator_name}</Link>
+          Hosted by{" "}
+          <Link to={`/users/${ride.creator_id}`}>{ride.creator_name}</Link>
         </p>
         <dl>
           <dt>When</dt>
@@ -154,7 +162,10 @@ export default function RideDetails() {
           <li key={rider.id}>
             <Link to={`/users/${rider.id}`}>
               {/* Each rider gets one of four colors, picked by their id */}
-              <span className={`initial initial-${rider.id % 4}`} aria-hidden="true">
+              <span
+                className={`initial initial-${rider.id % 4}`}
+                aria-hidden="true"
+              >
                 {rider.name[0]}
               </span>
               {rider.name}

@@ -10,6 +10,7 @@ import Profile from "./users/Profile.jsx";
 import EditProfile from "./users/EditProfile.jsx";
 import UserProfile from "./users/UserProfile.jsx";
 
+/** The page layout and the route for each page */
 export default function App() {
   return (
     <>

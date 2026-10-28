@@ -4,6 +4,7 @@ import { api } from "../api.js";
 import { useAuth } from "../auth/AuthContext.jsx";
 import RideForm from "./RideForm.jsx";
 
+/** The page where a host edits their ride */
 export default function EditRide() {
   const { id } = useParams();
   const { token, user } = useAuth();
@@ -15,7 +16,7 @@ export default function EditRide() {
     if (!token) return;
     api(`/rides/${id}`, { token })
       .then(setRide)
-      .catch((e) => setError(e.message));
+      .catch((error) => setError(error.message));
   }, [id, token]);
 
   if (!token) {
@@ -26,8 +27,13 @@ export default function EditRide() {
     );
   }
   if (!ride || !user)
-    return error ? <p role="alert">{error}</p> : <p className="loading">Loading...</p>;
-  if (ride.creator_id !== user.id) return <p>Only the host can edit this ride.</p>;
+    return error ? (
+      <p role="alert">{error}</p>
+    ) : (
+      <p className="loading">Loading...</p>
+    );
+  if (ride.creator_id !== user.id)
+    return <p>Only the host can edit this ride.</p>;
 
   async function onSave(changes) {
     await api(`/rides/${id}`, { method: "PUT", token, body: changes });

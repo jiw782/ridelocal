@@ -6,19 +6,50 @@ await seed();
 await db.end();
 console.log("🌱 Database seeded.");
 
+/** Fills the database with demo users, rides, and riders who have joined them */
 async function seed() {
   // Every seed user logs in with this password
   const passwordHash = await bcrypt.hash("password123", 10);
 
   const users = [
-    { name: "Maya", email: "maya@example.com", zip: "77001", bio: "Weekend loops and coffee stops." },
+    {
+      name: "Maya",
+      email: "maya@example.com",
+      zip: "77001",
+      bio: "Weekend loops and coffee stops.",
+    },
     { name: "Chris", email: "chris@example.com", zip: "77001", bio: null },
-    { name: "Dana", email: "dana@example.com", zip: "77001", bio: "New to group rides." },
-    { name: "Sam", email: "sam@example.com", zip: "77002", bio: "Training for my first century." },
+    {
+      name: "Dana",
+      email: "dana@example.com",
+      zip: "77001",
+      bio: "New to group rides.",
+    },
+    {
+      name: "Sam",
+      email: "sam@example.com",
+      zip: "77002",
+      bio: "Training for my first century.",
+    },
     { name: "Priya", email: "priya@example.com", zip: "77002", bio: null },
-    { name: "Leo", email: "leo@example.com", zip: "77003", bio: "Sunset rides only." },
-    { name: "Alex", email: "alex@example.com", zip: "77006", bio: "Montrose local. Will stop for tacos." },
-    { name: "Jordan", email: "jordan@example.com", zip: "77006", bio: "Road bike, gravel bike, any bike." },
+    {
+      name: "Leo",
+      email: "leo@example.com",
+      zip: "77003",
+      bio: "Sunset rides only.",
+    },
+    {
+      name: "Alex",
+      email: "alex@example.com",
+      zip: "77006",
+      bio: "Montrose local. Will stop for tacos.",
+    },
+    {
+      name: "Jordan",
+      email: "jordan@example.com",
+      zip: "77006",
+      bio: "Road bike, gravel bike, any bike.",
+    },
   ];
 
   const userIds = {};
@@ -113,7 +144,8 @@ async function seed() {
     {
       creator: "Jordan",
       title: "Buffalo Bayou loop",
-      description: "Both sides of the bayou trail at a steady pace. Lights recommended.",
+      description:
+        "Both sides of the bayou trail at a steady pace. Lights recommended.",
       zip: "77006",
       meetingSpot: "Waugh Drive Bridge",
       date: "2026-11-10",
@@ -125,7 +157,8 @@ async function seed() {
     {
       creator: "Maya",
       title: "Beginner skills clinic",
-      description: "Practice group riding basics: signaling, spacing and stopping safely.",
+      description:
+        "Practice group riding basics: signaling, spacing and stopping safely.",
       zip: "77006",
       meetingSpot: "Cherryhurst Park",
       date: "2026-11-14",
@@ -174,7 +207,8 @@ async function seed() {
     {
       creator: "Priya",
       title: "Heights hill climb",
-      description: "Up and over the Heights bridges, regrouping after each one.",
+      description:
+        "Up and over the Heights bridges, regrouping after each one.",
       zip: "77006",
       meetingSpot: "Fairview Street Bike Shop",
       date: "2026-12-05",
@@ -186,7 +220,8 @@ async function seed() {
     {
       creator: "Alex",
       title: "Holiday lights tour",
-      description: "Cruise the best-decorated streets in Montrose. Santa hats welcome.",
+      description:
+        "Cruise the best-decorated streets in Montrose. Santa hats welcome.",
       zip: "77006",
       meetingSpot: "Cherryhurst Park",
       date: "2026-12-13",

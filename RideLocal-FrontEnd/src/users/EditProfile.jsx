@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router";
 import { api } from "../api.js";
 import { useAuth } from "../auth/AuthContext.jsx";
 
+/** The form for editing your name, zip code, bio and picture */
 export default function EditProfile() {
   const { token, user, setUser } = useAuth();
   const navigate = useNavigate();
@@ -31,8 +32,8 @@ export default function EditProfile() {
       });
       setUser(updated); // so the navbar and profile show the new details
       navigate("/profile");
-    } catch (e) {
-      setError(e.message);
+    } catch (error) {
+      setError(error.message);
     }
   }
 
