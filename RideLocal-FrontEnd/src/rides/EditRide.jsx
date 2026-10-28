@@ -26,7 +26,7 @@ export default function EditRide() {
     );
   }
   if (!ride || !user)
-    return error ? <p role="alert">{error}</p> : <p>Loading...</p>;
+    return error ? <p role="alert">{error}</p> : <p className="loading">Loading...</p>;
   if (ride.creator_id !== user.id) return <p>Only the host can edit this ride.</p>;
 
   async function onSave(changes) {

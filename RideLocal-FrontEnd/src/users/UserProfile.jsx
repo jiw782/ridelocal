@@ -23,7 +23,7 @@ export default function UserProfile() {
 
   // Your own page has more on it, like the edit link
   if (me && String(me.id) === id) return <Navigate to="/profile" replace />;
-  if (!user) return error ? <p role="alert">{error}</p> : <p>Loading...</p>;
+  if (!user) return error ? <p role="alert">{error}</p> : <p className="loading">Loading...</p>;
 
   return (
     <>

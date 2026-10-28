@@ -14,7 +14,7 @@ export default function EditProfile() {
         <Link to="/login">Log in</Link> to edit your profile.
       </p>
     );
-  if (!user) return <p>Loading...</p>;
+  if (!user) return <p className="loading">Loading...</p>;
 
   async function onSave(formData) {
     const changes = {

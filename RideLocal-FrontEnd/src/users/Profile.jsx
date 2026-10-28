@@ -22,7 +22,7 @@ export default function Profile() {
         <Link to="/login">Log in</Link> to see your profile.
       </p>
     );
-  if (!user) return <p>Loading...</p>;
+  if (!user) return <p className="loading">Loading...</p>;
 
   // Hosts are riders on their own rides too, so split them out
   const hosting = rides.filter((ride) => ride.creator_id === user.id);

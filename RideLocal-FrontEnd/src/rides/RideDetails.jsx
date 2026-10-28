@@ -83,7 +83,7 @@ export default function RideDetails() {
     );
   }
 
-  if (!ride) return error ? <p role="alert">{error}</p> : <p>Loading...</p>;
+  if (!ride) return error ? <p role="alert">{error}</p> : <p className="loading">Loading...</p>;
 
   const isHost = user?.id === ride.creator_id;
   const hasJoined = riders.some((rider) => rider.id === user?.id);
@@ -146,6 +146,10 @@ export default function RideDetails() {
         {riders.map((rider) => (
           <li key={rider.id}>
             <Link to={`/users/${rider.id}`}>
+              {/* Each rider gets one of four colors, picked by their id */}
+              <span className={`initial initial-${rider.id % 4}`} aria-hidden="true">
+                {rider.name[0]}
+              </span>
               {rider.name}
               {rider.id === ride.creator_id && " (host)"}
             </Link>

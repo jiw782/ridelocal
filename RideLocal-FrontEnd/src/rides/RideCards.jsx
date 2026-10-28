@@ -27,6 +27,16 @@ export default function RideCards({ rides }) {
                 {ride.max_riders && ` / ${ride.max_riders}`}{" "}
                 {ride.rider_count === 1 && !ride.max_riders ? "rider" : "riders"}
               </p>
+              {/* How full the ride is; the count above already says it in words */}
+              {ride.max_riders && (
+                <div className="spots" aria-hidden="true">
+                  <div
+                    style={{
+                      width: `${Math.min(100, (ride.rider_count / ride.max_riders) * 100)}%`,
+                    }}
+                  />
+                </div>
+              )}
             </div>
           </li>
         );

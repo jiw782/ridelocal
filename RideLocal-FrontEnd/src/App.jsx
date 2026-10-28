@@ -27,6 +27,9 @@ export default function App() {
           <Route path="/users/:id" element={<UserProfile />} />
         </Routes>
       </main>
+      <footer>
+        <p>RideLocal · Group rides in your neighborhood</p>
+      </footer>
     </>
   );
 }
