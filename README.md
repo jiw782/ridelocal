@@ -161,7 +161,7 @@ A **user** looks like `{ id, name, email, zip_code, bio, profile_pic }`. Passwor
 | `POST` | `/rides/:id/join` 🔒 | | `201` `{ ride_id, user_id }` | `404`, `409` full or already joined |
 | `DELETE` | `/rides/:id/join` 🔒 | | `200` `{ ride_id, user_id }` | `400` host can't leave, `404` not joined |
 
-A **ride** looks like `{ id, creator_id, title, description, zip_code, meeting_spot, ride_date, difficulty, max_riders }`. The `GET` routes also include `rider_count`.
+A **ride** looks like `{ id, creator_id, title, description, zip_code, meeting_spot, ride_date, difficulty, max_riders }`. The `GET` routes also include `rider_count`. The public routes (`GET /rides` and `GET /users/:id/rides`) leave out `meeting_spot` unless the request has a valid token.
 
 - `ride_date` is an ISO 8601 timestamp, e.g. `2027-01-01T15:00:00Z`.
 - `difficulty` is `easy` (default), `moderate` or `hard`.

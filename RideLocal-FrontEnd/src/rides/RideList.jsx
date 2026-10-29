@@ -37,7 +37,7 @@ const steps = [
 
 /** The home page: a zip code search and the upcoming rides it finds */
 export default function RideList() {
-  const { user } = useAuth();
+  const { token, user } = useAuth();
   // The searched zip lives in the URL (/?zip=77001), so searches can be
   // shared and the back button works
   const [searchParams, setSearchParams] = useSearchParams();
@@ -49,13 +49,14 @@ export default function RideList() {
   const zip = searchParams.get("zip") ?? user?.zip_code;
 
   useEffect(() => {
-    api(zip ? `/rides?zip=${zip}` : "/rides")
+    // Meeting spots are only sent with a token
+    api(zip ? `/rides?zip=${zip}` : "/rides", { token })
       .then((rides) => {
         setRides(rides);
         setError(null);
       })
       .catch((error) => setError(error.message));
-  }, [zip]);
+  }, [zip, token]);
 
   const place = usePlace(zip);
 

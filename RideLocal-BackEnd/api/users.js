@@ -7,6 +7,7 @@ import {
 } from "#db/queries/users";
 import { createToken } from "#utils/jwt";
 import requireUser from "#middleware/requireUser";
+import { hideMeetingSpots } from "#utils/hideMeetingSpots";
 import { getRidesByCreatorId, getRidesByUserId } from "#db/queries/rides";
 
 const router = express.Router();
@@ -72,5 +73,5 @@ router.get("/:id", async (req, res) => {
 
 router.get("/:id/rides", async (req, res) => {
   const rides = await getRidesByCreatorId(req.params.id);
-  res.send(rides);
+  res.send(hideMeetingSpots(rides, req.user));
 });

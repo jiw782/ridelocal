@@ -13,6 +13,7 @@ import {
   leaveRide,
 } from "#db/queries/rideMembers";
 import requireUser from "#middleware/requireUser";
+import { hideMeetingSpots } from "#utils/hideMeetingSpots";
 import { lookupZip } from "#utils/zippopotam";
 
 const router = express.Router();
@@ -30,7 +31,7 @@ async function validateRide({ title, zip_code, meeting_spot, ride_date } = {}) {
 router.get("/", async (req, res) => {
   const { zip } = req.query;
   const rides = zip ? await getRidesByZip(zip) : await getUpcomingRides();
-  res.send(rides);
+  res.send(hideMeetingSpots(rides, req.user));
 });
 
 router.post("/", requireUser, async (req, res) => {

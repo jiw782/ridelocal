@@ -17,7 +17,9 @@ export default function RideCards({ rides }) {
             <div>
               <Link to={`/rides/${ride.id}`}>{ride.title}</Link>
               <p>
-                {formatRideDate(ride.ride_date)} · {ride.meeting_spot}
+                {formatRideDate(ride.ride_date)}
+                {/* Visitors who aren't logged in don't get the meeting spot */}
+                {ride.meeting_spot && ` · ${ride.meeting_spot}`}
               </p>
               <p>
                 <span className={`badge badge-${ride.difficulty}`}>

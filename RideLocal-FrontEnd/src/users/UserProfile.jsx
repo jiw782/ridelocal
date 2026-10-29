@@ -7,19 +7,19 @@ import RideCards from "../rides/RideCards.jsx";
 /** Another rider's public profile and the rides they're hosting */
 export default function UserProfile() {
   const { id } = useParams();
-  const { user: currentUser } = useAuth();
+  const { token, user: currentUser } = useAuth();
   const [user, setUser] = useState(null);
   const [rides, setRides] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    Promise.all([api(`/users/${id}`), api(`/users/${id}/rides`)])
+    Promise.all([api(`/users/${id}`), api(`/users/${id}/rides`, { token })])
       .then(([user, rides]) => {
         setUser(user);
         setRides(rides);
       })
       .catch((error) => setError(error.message));
-  }, [id]);
+  }, [id, token]);
 
   // Your own page has more on it, like the edit link
   if (currentUser && String(currentUser.id) === id)
